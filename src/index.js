@@ -8,7 +8,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 const { connection } = require('./connector')
 
-
+app.get("/totalRecovered", async (req,res) =>{
+    let result = await connection.aggregate([
+      {
+        $group: {
+            _id : "total",
+          recovered: { $sum: "$recovered" },
+        },
+      },
+    ]);
+    // let result = await connection.find({});
+    console.log({result});
+    res.send("got it");
+})
 
 
 
