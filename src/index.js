@@ -24,7 +24,7 @@ app.get("/totalRecovered", async (req,res) =>{
     // let result = await connection.find({});
     // console.log({result,resultd});
     res.send({
-        data:resultdm,
+        data:result,
     })
 })
 
