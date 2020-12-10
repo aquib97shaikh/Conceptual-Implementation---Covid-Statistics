@@ -10,24 +10,51 @@ app.use(express.json());
 const { connection } = require('./connector')
 
 app.get("/totalRecovered", async (req,res) =>{
-    let result = await connection.aggregate([
-      {
-        $group: {
-            _id : "total",
-            recovered: { $sum: "$recovered" },
-        },
+  let result = await connection.aggregate([
+    {
+      $group: {
+        _id: "total",
+        recovered: { $sum: "$recovered" },
       },
-    ]);
-    // let result = data.reduce((t,n)=>t+n.recovered,0);
-
-
-    // let result = await connection.find({});
-    // console.log({result,resultd});
-    res.send({
-        data:result[0],
-    })
+    },
+  ]);
+  // let result = data.reduce((t,n)=>t+n.recovered,0);
+  // let result = await connection.find({});
+  // console.log({result,resultd});
+  res.send({
+    data: result[0],
+  });
 })
 
+app.get("/totalActive",async (req,res) =>{
+  let result = await connection.aggregate([
+    {
+      $group:{
+        _id:"total",
+        active:{$sum:{$subtract:["$infected","$recovered"]}
+        }
+      }
+    }
+  ]);
+  res.send({
+    data:result[0]
+  });
+
+})
+
+app.get("/totalDeath", async (req,res)=>{
+  let result = await connection.aggregate([
+    {
+      $group:{
+        _id:"total",
+        death:{$sum:"$death"}
+      }
+    }
+  ]);
+  res.send({
+    data:result[0]
+  });
+} )
 
 
 
