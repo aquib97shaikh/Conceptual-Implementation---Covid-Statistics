@@ -59,16 +59,22 @@ app.get("/totalDeath", async (req,res)=>{
 app.get("/hotspotStates",async (req,res) =>{
   let result = await connection.aggregate([
     {
-      $project:{
-        _id:false,
-        state:"$state",
-        rate:{
-          $round:
-          [{ $divide:
-          [ {$subtract:["$infected","$recovered"]},"$recovered"]},5],
-        }
-      }
-    }
+      $project: {
+        _id: false,
+        state: "$state",
+        rate: {
+          $round: [
+            {
+              $divide: [
+                { $subtract: ["$infected", "$recovered"] },
+                "$infected",
+              ],
+            },
+            5,
+          ],
+        },
+      },
+    },
   ]);
   res.send({
     data:result,
