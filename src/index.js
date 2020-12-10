@@ -56,6 +56,21 @@ app.get("/totalDeath", async (req,res)=>{
   });
 } )
 
+app.get("/hotspotStates",async (req,res) =>{
+  let result = await connection.aggregate([
+    {
+      $project:{
+        _id:false,
+        state:"$state",
+        rate:{
+          $divide:[ {$subtract:["$infected","$recovered"]},"$recovered"]}
+      }
+    }
+  ]);
+  res.send({
+    data:result,
+  })
+})
 
 
 app.listen(port, () => console.log(`App listening on port ${port}!`))
