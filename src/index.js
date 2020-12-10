@@ -14,7 +14,7 @@ app.get("/totalRecovered", async (req,res) =>{
       {
         $group: {
             _id : "total",
-          recovered: { $sum: "$recovered" },
+            recovered: { $sum: "$recovered" },
         },
       },
     ]);
@@ -24,7 +24,7 @@ app.get("/totalRecovered", async (req,res) =>{
     // let result = await connection.find({});
     // console.log({result,resultd});
     res.send({
-        data:result,
+        data:result[0],
     })
 })
 
