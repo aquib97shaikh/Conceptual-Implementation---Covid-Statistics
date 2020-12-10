@@ -55,28 +55,7 @@ app.get("/totalDeath", async (req, res) => {
 });
 
 app.get("/hotspotStates", async (req, res) => {
-  // let result = await connection.aggregate([
-  //   {
-  //     $project: {
-  //       _id: false,
-  //       state: "$state",
-  //       rate: {
-  //         $round: [
-  //           {
-  //             $divide: [
-  //               { $subtract: ["$infected", "$recovered"] },
-  //               "$infected",
-  //             ],
-  //           },
-  //           5,
-  //         ],
-  //       },
-  //     },
-  //   },
-  //   {
-  //     $match: { $gte: 0.1 },
-  //   },
-  // ]);
+
   let pipeline = [
     {
       $project: {
@@ -106,6 +85,33 @@ app.get("/hotspotStates", async (req, res) => {
     data: result,
   });
 });
+
+app.get("/healthyStates",async(req,res) =>{
+  let pipeline =[
+    {
+      $project:{
+        _id:false,
+        state:"$state",
+        mortality:{
+          $round:[{
+            $divide:["$death","$infected"]
+          }
+            ,5
+          ]
+        }
+      }
+    },
+    {
+      $match:{
+        mortality:{$lt:0.005}
+      }
+    }
+  ]
+  let result = await connection.aggregate(pipeline);
+  res.send({
+    data: result,
+  });
+})
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));
 
