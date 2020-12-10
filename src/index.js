@@ -63,7 +63,10 @@ app.get("/hotspotStates",async (req,res) =>{
         _id:false,
         state:"$state",
         rate:{
-          $divide:[ {$subtract:["$infected","$recovered"]},"$recovered"]}
+          $round:
+          [{ $divide:
+          [ {$subtract:["$infected","$recovered"]},"$recovered"]},5],
+        }
       }
     }
   ]);
